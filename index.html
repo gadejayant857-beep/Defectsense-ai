@@ -1,40 +1,12 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DefectSense AI</title>
-<style>
-html,body{margin:0;min-width:320px;min-height:100%;background:#070a0c}
-#boot-fallback{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,rgba(47,140,255,.14),transparent 35%),#070a0c;color:#f4f7f6;font-family:Inter,system-ui,sans-serif}
-.boot-card{text-align:center;padding:40px 28px;border:1px solid rgba(255,255,255,.1);border-radius:24px;background:rgba(255,255,255,.045);box-shadow:0 20px 80px rgba(0,0,0,.4);max-width:520px}
-.boot-title{font-size:clamp(32px,8vw,52px);font-weight:800;letter-spacing:-2px}
-.boot-sub{margin-top:12px;color:#9aa5b1;font-size:15px}
-.boot-status{display:inline-block;margin-top:22px;padding:9px 14px;border-radius:999px;background:rgba(47,140,255,.12);color:#2f8cff;font-size:13px;font-weight:700}
-</style>
-</head>
-<body>
-<div id="root"><div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">Warranty intelligence & early defect detection</div><div class="boot-status">Starting application…</div></div></div></div>
-<script>
-window.__DEFECTSENSE_BOOT__=true;
-window.addEventListener('error',function(e){
-var r=document.getElementById('root');
-if(r) r.innerHTML='<div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">React startup error</div><pre style="white-space:pre-wrap;text-align:left;margin-top:20px;color:#ff7070;font-size:12px">'+String(e.error?.stack||e.message||'Unknown error').replace(/</g,'&lt;')+'</pre></div></div>';
-console.error('DefectSense startup error:',e.error||e.message);
-});
-window.addEventListener('unhandledrejection',function(e){
-var r=document.getElementById('root');
-if(r) r.innerHTML='<div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">JavaScript promise error</div><pre style="white-space:pre-wrap;text-align:left;margin-top:20px;color:#ff7070;font-size:12px">'+String(e.reason?.stack||e.reason||'Unknown promise error').replace(/</g,'&lt;')+'</pre></div></div>';
-console.error('DefectSense promise error:',e.reason);
-});
-</script>
-<script>
-setTimeout(function(){
-var r=document.getElementById("root");
-if(r && r.innerText.includes("Starting application")){
-r.innerHTML='<div style="min-height:100vh;background:#070a0c;color:#f4f7f6;font-family:Inter,system-ui,sans-serif;padding:24px;box-sizing:border-box"><div style="max-width:1100px;margin:auto"><div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.045)"><div><div style="font-size:24px;font-weight:800">DefectSense AI</div><div style="color:#8f9aa5;font-size:13px;margin-top:4px">Warranty Intelligence Platform</div></div><div style="color:#2f8cff;font-size:13px;font-weight:700">● SYSTEM ONLINE</div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:20px"><div style="padding:24px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.045)"><div style="color:#8f9aa5;font-size:13px">Total Claims</div><div style="font-size:36px;font-weight:800;margin-top:8px">8</div></div><div style="padding:24px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.045)"><div style="color:#8f9aa5;font-size:13px">Active Defect Patterns</div><div style="font-size:36px;font-weight:800;margin-top:8px">4</div></div><div style="padding:24px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.045)"><div style="color:#8f9aa5;font-size:13px">Critical Signals</div><div style="font-size:36px;font-weight:800;margin-top:8px">4</div></div></div><div style="margin-top:20px;padding:24px;border:1px solid rgba(47,140,255,.2);border-radius:18px;background:linear-gradient(135deg,rgba(47,140,255,.1),rgba(255,255,255,.035))"><div style="font-size:18px;font-weight:700">Early Defect Detection</div><div style="color:#9aa5b1;margin-top:8px;line-height:1.6">Warranty complaints are being transformed into actionable defect intelligence before problems become large-scale failures.</div></div></div></div>';
-}},2500);
-</script>
-<script type="module" src="/src/main.jsx"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DefectSense AI</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
