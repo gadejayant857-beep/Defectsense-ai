@@ -1,0 +1,167 @@
+const dashboardResponse = {
+  status: 'success',
+  service: 'DefectSense AI',
+  version: '1.0',
+
+  dashboard: {
+    total_claims: 8,
+    early_warnings: 2,
+    critical_defects: 1,
+    top_defect: 'Battery overheating',
+  },
+
+
+  claims: [
+    { id: '#CLM-10001', product: 'Model X1', issue: 'Battery overheating', description: 'Battery temperature rises during charging', severity: 'Critical', date: '2026-09-01', risk: 'Critical' },
+    { id: '#CLM-10002', product: 'Model X1', issue: 'Battery overheating', description: 'Device becomes unusually hot after charging', severity: 'Critical', date: '2026-09-02', risk: 'Critical' },
+    { id: '#CLM-10003', product: 'Model A7', issue: 'Brake vibration', description: 'Vibration felt while braking at medium speed', severity: 'High', date: '2026-09-03', risk: 'High' },
+    { id: '#CLM-10004', product: 'Model X1', issue: 'Display failure', description: 'Screen flickers intermittently during use', severity: 'Medium', date: '2026-09-04', risk: 'Medium' },
+    { id: '#CLM-10005', product: 'Model B4', issue: 'Charging fault', description: 'Charging stops before reaching full capacity', severity: 'High', date: '2026-09-05', risk: 'Medium' },
+    { id: '#CLM-10006', product: 'Model X1', issue: 'Battery overheating', description: 'Unexpected shutdown after device temperature increased', severity: 'Critical', date: '2026-09-06', risk: 'Critical' },
+    { id: '#CLM-10007', product: 'Model A7', issue: 'Brake vibration', description: 'Steering wheel vibrates during braking', severity: 'High', date: '2026-09-07', risk: 'High' },
+    { id: '#CLM-10008', product: 'Model X1', issue: 'Battery overheating', description: 'High temperature warning appears while charging', severity: 'Critical', date: '2026-09-08', risk: 'Critical' },
+  ],
+
+  defects: [
+    { name: 'Battery overheating', product: 'Model X1', claims: 4, severity: 'Critical' },
+    { name: 'Brake vibration', product: 'Model A7', claims: 2, severity: 'High' },
+    { name: 'Display failure', product: 'Model X1', claims: 1, severity: 'Medium' },
+    { name: 'Charging fault', product: 'Model B4', claims: 1, severity: 'Medium' },
+  ],
+
+  early_warnings: [
+    {
+      issue: 'Battery overheating',
+      claims: 4,
+      average_severity: 100,
+      risk: 'Critical',
+      score: 94,
+      trend: 'Strong increase',
+      trend_score: 90,
+      early_warning: true,
+    },
+    {
+      issue: 'Brake vibration',
+      claims: 2,
+      average_severity: 75,
+      risk: 'High',
+      score: 72,
+      trend: 'Increasing',
+      trend_score: 70,
+      early_warning: true,
+    },
+  ],
+
+  critical_defects: [
+    {
+      issue: 'Battery overheating',
+      claims: 4,
+      average_severity: 100,
+      risk: 'Critical',
+      score: 94,
+      trend: 'Strong increase',
+      trend_score: 90,
+      early_warning: true,
+    },
+  ],
+
+  intelligence: [
+    {
+      issue: 'Battery overheating',
+      claims: 4,
+      average_severity: 100,
+      risk: 'Critical',
+      score: 94,
+      trend: 'Strong increase',
+      trend_score: 90,
+      early_warning: true,
+    },
+    {
+      issue: 'Brake vibration',
+      claims: 2,
+      average_severity: 75,
+      risk: 'High',
+      score: 72,
+      trend: 'Increasing',
+      trend_score: 70,
+      early_warning: true,
+    },
+    {
+      issue: 'Display failure',
+      claims: 1,
+      average_severity: 50,
+      risk: 'Medium',
+      score: 47,
+      trend: 'Stable signal',
+      trend_score: 45,
+      early_warning: false,
+    },
+    {
+      issue: 'Charging fault',
+      claims: 1,
+      average_severity: 75,
+      risk: 'Medium',
+      score: 57,
+      trend: 'Stable signal',
+      trend_score: 45,
+      early_warning: false,
+    },
+  ],
+
+  analytics: {
+    total_claims: 8,
+
+    products: [
+      { product: 'Model X1', claims: 5 },
+      { product: 'Model A7', claims: 2 },
+      { product: 'Model B4', claims: 1 },
+    ],
+
+    severity: [
+      { severity: 'Critical', claims: 4 },
+      { severity: 'High', claims: 3 },
+      { severity: 'Medium', claims: 1 },
+    ],
+
+    top_defects: [
+      { issue: 'Battery overheating', claims: 4 },
+      { issue: 'Brake vibration', claims: 2 },
+      { issue: 'Display failure', claims: 1 },
+      { issue: 'Charging fault', claims: 1 },
+    ],
+  },
+}
+
+export async function getDashboard() {
+  return dashboardResponse
+}
+
+export async function getClaims() {
+  const response = await getDashboard()
+  return response.claims
+}
+
+export async function getDefects() {
+  const response = await getDashboard()
+  return response.defects
+}
+
+export async function getIntelligence() {
+  const response = await getDashboard()
+  return response.intelligence
+}
+
+export async function getAnalytics() {
+  const response = await getDashboard()
+  return response.analytics
+}
+
+export async function getEarlyWarnings() {
+  const response = await getDashboard()
+  return response.early_warnings
+}
+
+export async function getCriticalDefects() {
+  const response = await getDashboard()
+  return response.critical_defects
+}

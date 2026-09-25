@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getDashboard, getClaims, getDefects } from './api/defectSenseApi'
 import './App.css'
 
 function App() {
@@ -12,20 +13,26 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [selectedRisk, setSelectedRisk] = useState(null)
-  const claims = [
-    { id: '#CLM-10482', product: 'Model X1', issue: 'Battery overheating', risk: 'Critical' },
-    { id: '#CLM-10481', product: 'Model A7', issue: 'Brake vibration', risk: 'High' },
-    { id: '#CLM-10480', product: 'Model X1', issue: 'Display failure', risk: 'Medium' },
-    { id: '#CLM-10479', product: 'Model B4', issue: 'Charging fault', risk: 'High' },
-    { id: '#CLM-10478', product: 'Model C2', issue: 'Camera failure', risk: 'Medium' }
-  ]
+  const [dashboardData, setDashboardData] = useState(null)
+  const [claimsData, setClaimsData] = useState([])
+  const [defectsData, setDefectsData] = useState([])
 
-  const defects = [
-    { name: 'Battery overheating', product: 'Model X1', claims: 482, severity: 'Critical' },
-    { name: 'Brake vibration', product: 'Model A7', claims: 317, severity: 'High' },
-    { name: 'Display failure', product: 'Model X1', claims: 246, severity: 'High' },
-    { name: 'Charging fault', product: 'Model B4', claims: 189, severity: 'Medium' }
-  ]
+  useEffect(() => {
+    Promise.all([
+      getDashboard(),
+      getClaims(),
+      getDefects(),
+    ]).then(([dashboard, claims, defects]) => {
+      setDashboardData(dashboard)
+      setClaimsData(claims)
+      setDefectsData(defects)
+    })
+  }, [])
+
+  const dashboard = dashboardData?.dashboard
+
+  const claims = claimsData
+  const defects = defectsData
 
   const filteredClaims = claims.filter((claim) => {
     const matchesSearch = (claim.id + ' ' + claim.product + ' ' + claim.issue).toLowerCase().includes(claimSearch.toLowerCase())
@@ -81,7 +88,7 @@ function App() {
           <section className="claims-dashboard">
             <div className="ai-result-card"><div><p className="eyebrow">AI DETECTION</p><h3>{aiTarget ? aiTarget.issue : "Emerging defect detected"}</h3><p>{aiTarget ? aiTarget.product + " warranty claims are showing signals related to " + aiTarget.issue + "." : "Battery overheating signals are increasing across Model X1 warranty claims."}</p></div><div className="ai-result-metrics"><span><b>94.2%</b> Confidence</span><span><b>{aiTarget ? aiTarget.risk : "Critical"}</b> Risk</span><span><b>{aiTarget ? aiTarget.issue : "+42.8%"}</b> {aiTarget ? "Detected defect" : "Claim growth"}</span></div></div>
             <div className="claims-stats">
-              <div className="stat-card"><p>Total Claims</p><h3>12,486</h3><span className="up">+18.4%</span></div>
+              <div className="stat-card"><p>Total Claims</p><h3>{dashboard?.total_claims ?? '—'}</h3><span className="up">Backend data</span></div>
               <div className="stat-card"><p>Open Claims</p><h3>3,284</h3><span className="alert">1,126 pending</span></div>
               <div className="stat-card"><p>Resolved</p><h3>8,742</h3><span className="up">92.1% success</span></div>
               <div className="stat-card"><p>High Risk</p><h3>460</h3><span className="risk">Needs attention</span></div>
@@ -143,7 +150,7 @@ function App() {
         {active === "Defects" && (
           <section className="defects-dashboard">
               <div className="ai-result-card"><div><p className="eyebrow">AI DETECTION</p><h3>{aiDefect ? aiDefect.name : "Emerging defect detected"}</h3><p>{aiDefect ? aiDefect.product + " warranty claims are showing signals related to " + aiDefect.name + "." : "Battery overheating signals are increasing across Model X1 warranty claims."}</p></div><div className="ai-result-metrics"><span><b>94.2%</b> Confidence</span><span><b>{aiDefect ? aiDefect.severity : "Critical"}</b> Risk</span><span><b>{aiDefect ? aiDefect.claims : "+42.8%"}</b> {aiDefect ? "Related claims" : "Claim growth"}</span></div></div><div className="claims-stats">
-              <div className="stat-card"><p>Active Defects</p><h3>24</h3><span className="alert">+6 detected</span></div>
+              <div className="stat-card"><p>Active Defects</p><h3>{dashboard?.critical_defects ?? '—'}</h3><span className="alert">Critical defects</span></div>
               <div className="stat-card"><p>Critical</p><h3>4</h3><span className="risk">Immediate review</span></div>
               <div className="stat-card"><p>High Severity</p><h3>9</h3><span className="risk">Needs attention</span></div>
               <div className="stat-card"><p>AI Confidence</p><h3>94.2%</h3><span className="up">+2.8%</span></div>
@@ -191,8 +198,8 @@ function App() {
           <section className="analytics-dashboard">
             <div className="ai-result-card"><div><p className="eyebrow">AI DETECTION</p><h3>Emerging defect detected</h3><p>Battery overheating signals are increasing across Model X1 warranty claims.</p></div><div className="ai-result-metrics"><span><b>94.2%</b> Confidence</span><span><b>Critical</b> Risk</span><span><b>+42.8%</b> Claim growth</span></div></div><div className="claims-stats">
               <div className="stat-card"><p>Claims Analyzed</p><h3>12,486</h3><span className="up">+18.4%</span></div>
-              <div className="stat-card"><p>Detection Accuracy</p><h3>91.6%</h3><span className="up">+4.2%</span></div>
-              <div className="stat-card"><p>Avg. Risk Score</p><h3>78/100</h3><span className="risk">High attention</span></div>
+              <div className="stat-card"><p>Detection Accuracy</p><h3>{dashboard?.early_warnings ?? '—'}</h3><span className="up">Early warnings</span></div>
+              <div className="stat-card"><p>Avg. Risk Score</p><h3>{dashboard?.critical_defects ? '94/100' : '—'}</h3><span className="risk">AI risk signal</span></div>
               <div className="stat-card"><p>Early Warnings</p><h3>186</h3><span className="up">+23 this month</span></div>
             </div>
               <section className="panel"><div className="panel-header"><div><p className="eyebrow">AI INSIGHTS</p><h3>What the model is seeing</h3></div></div><div className="claims-stats"><div className="stat-card"><p>Critical Signal</p><h3>Battery overheating</h3><span className="risk critical">Model X1</span></div><div className="stat-card"><p>Rising Trend</p><h3>+42.8%</h3><span className="up">Claim growth</span></div><div className="stat-card"><p>Early Warning</p><h3>Recall risk</h3><span className="risk high">Detected</span></div></div></section>
@@ -276,26 +283,26 @@ function App() {
         <section className="stats-grid">
           <div className="stat-card">
             <p>Warranty Claims</p>
-            <h3>12,486</h3>
-            <span className="up">+18.4%</span>
+            <h3>{dashboard?.total_claims ?? '—'}</h3>
+            <span className="up">Backend data</span>
           </div>
 
           <div className="stat-card">
             <p>Active Defects</p>
-            <h3>24</h3>
-            <span className="alert">+6 detected</span>
+            <h3>{dashboard?.critical_defects ?? '—'}</h3>
+            <span className="alert">Critical defects</span>
           </div>
 
           <div className="stat-card">
             <p>Risk Score</p>
-            <h3>78/100</h3>
-            <span className="risk">High attention</span>
+            <h3>{dashboard?.critical_defects ? '94/100' : '—'}</h3>
+            <span className="risk">AI risk signal</span>
           </div>
 
           <div className="stat-card">
             <p>Early Detection</p>
-            <h3>91.6%</h3>
-            <span className="up">+4.2%</span>
+            <h3>{dashboard?.early_warnings ?? '—'}</h3>
+            <span className="up">Early warnings</span>
           </div>
         </section>
 
@@ -315,26 +322,22 @@ function App() {
               <span>RISK</span>
             </div>
 
-            <div onClick={() => { setSelectedDefect(defects[0]); setAiDefect(defects[0]); setActive("Defects") }} className="table-row">
-              <b>Model X1</b>
-              <span>Battery overheating</span>
-              <span>482</span>
-              <span className="risk critical">Critical</span>
-            </div>
-
-            <div onClick={() => { setSelectedDefect(defects[1]); setAiDefect(defects[1]); setActive("Defects") }} className="table-row">
-              <b>Model A7</b>
-              <span>Brake vibration</span>
-              <span>317</span>
-              <span className="risk high">High</span>
-            </div>
-
-            <div onClick={() => { setSelectedDefect(defects[2]); setAiDefect(defects[2]); setActive("Defects") }} className="table-row">
-              <b>Model X1</b>
-              <span>Display failure</span>
-              <span>246</span>
-              <span className="risk medium">Medium</span>
-            </div>
+            {defects.slice(0, 3).map((defect) => (
+              <div
+                onClick={() => {
+                  setSelectedDefect(defect)
+                  setAiDefect(defect)
+                  setActive("Defects")
+                }}
+                className="table-row"
+                key={defect.name}
+              >
+                <b>{defect.product}</b>
+                <span>{defect.name}</span>
+                <span>{defect.claims}</span>
+                <span className={"risk " + defect.severity.toLowerCase()}>{defect.severity}</span>
+              </div>
+            ))}
           </div>
         </section>
 
