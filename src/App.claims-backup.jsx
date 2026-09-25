@@ -1,0 +1,162 @@
+import { useState } from 'react'
+import './App.css'
+
+function App() {
+  const [active, setActive] = useState('Overview')
+
+  return (
+    <div className="app">
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brand-mark">D</div>
+          <div>
+            <h2>DefectSense</h2>
+            <span>AI Intelligence</span>
+          </div>
+        </div>
+
+        <nav>
+          {['Overview', 'Claims', 'Defects', 'Analytics'].map((item) => (
+            <button
+              key={item}
+              className={active === item ? 'nav-item active' : 'nav-item'}
+              onClick={() => setActive(item)}
+            >
+              <span className="nav-dot"></span>
+              {item}
+            </button>
+          ))}
+        </nav>
+
+        <div className="sidebar-bottom">
+          <div className="ai-status">
+            <span></span>
+            AI Engine Online
+          </div>
+          <small>v1.0.0 • Synapse 2026</small>
+        </div>
+      </aside>
+
+      <main className="main">
+        <header className="topbar">
+          <div>
+            <p className="eyebrow">WARRANTY INTELLIGENCE</p>
+            <h1>{active}</h1>
+          {active === "Claims" && (
+            <div className="panel">
+              <p className="eyebrow">WARRANTY DATA</p>
+              <h3>Claims Intelligence</h3>
+              <p className="hero-text">Monitor warranty claims and identify unusual complaint patterns.</p>
+            </div>
+          )}
+          </div>
+          <button className="profile">J</button>
+        </header>
+
+        <section className="hero">
+          <div>
+            <p className="eyebrow">EARLY DEFECT DETECTION</p>
+            <h2>
+              Turn warranty data into
+              <br />
+              <span>early warnings.</span>
+            </h2>
+            <p className="hero-text">
+              DefectSense AI analyzes warranty claims and complaint patterns
+              to identify emerging defects before they escalate.
+            </p>
+            <button className="primary-btn">
+              Analyze Claims <span>→</span>
+            </button>
+          </div>
+
+          <div className="hero-visual">
+            <div className="signal-card">
+              <div className="signal-top">
+                <span>DEFECT SIGNAL</span>
+                <b>LIVE</b>
+              </div>
+              <div className="signal-value">+42.8%</div>
+              <p>Battery-related complaints</p>
+              <div className="signal-line">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="stats-grid">
+          <div className="stat-card">
+            <p>Warranty Claims</p>
+            <h3>12,486</h3>
+            <span className="up">+18.4%</span>
+          </div>
+
+          <div className="stat-card">
+            <p>Active Defects</p>
+            <h3>24</h3>
+            <span className="alert">+6 detected</span>
+          </div>
+
+          <div className="stat-card">
+            <p>Risk Score</p>
+            <h3>78/100</h3>
+            <span className="risk">High attention</span>
+          </div>
+
+          <div className="stat-card">
+            <p>Early Detection</p>
+            <h3>91.6%</h3>
+            <span className="up">+4.2%</span>
+          </div>
+        </section>
+
+        <section className="panel">
+          <div className="panel-header">
+            <div>
+              <p className="eyebrow">CLAIM INTELLIGENCE</p>
+              <h3>Top emerging defects</h3>
+            </div>
+          </div>
+
+          <div className="table">
+            <div className="table-head">
+              <span>PRODUCT</span>
+              <span>DEFECT SIGNAL</span>
+              <span>CLAIMS</span>
+              <span>RISK</span>
+            </div>
+
+            <div className="table-row">
+              <b>Model X1</b>
+              <span>Battery overheating</span>
+              <span>482</span>
+              <span className="risk critical">Critical</span>
+            </div>
+
+            <div className="table-row">
+              <b>Model A7</b>
+              <span>Brake vibration</span>
+              <span>317</span>
+              <span className="risk high">High</span>
+            </div>
+
+            <div className="table-row">
+              <b>Model X1</b>
+              <span>Display failure</span>
+              <span>246</span>
+              <span className="risk medium">Medium</span>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          <span>DefectSense AI</span>
+          <span>Warranty Claims Mining • Early Defect Detection</span>
+        </footer>
+      </main>
+    </div>
+  )
+}
+
+export default App
