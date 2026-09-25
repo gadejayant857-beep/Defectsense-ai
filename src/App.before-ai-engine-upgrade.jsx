@@ -105,7 +105,7 @@ function App() {
                   <option value="Medium">Medium</option>
                 </select>
               </div>
-              <div className="table data-table">
+              <div className="table">
                 <div className="table-head"><span>CLAIM ID</span><span>PRODUCT</span><span>ISSUE</span><span>RISK</span></div>
                 {filteredClaims.map((claim) => (
                   <div className="table-row" key={claim.id}>
@@ -124,7 +124,7 @@ function App() {
                   <div><p className="eyebrow">CLAIM ANALYSIS</p><h3>{selectedClaim.id}</h3></div>
                   <button className="primary-btn" onClick={() => setSelectedClaim(null)}>Close</button>
                 </div>
-                <div className="table data-table">
+                <div className="table">
                   <div className="table-row"><b>Product</b><span>{selectedClaim.product}</span></div>
                   <div className="table-row"><b>Detected Defect</b><span>{selectedClaim.issue}</span></div>
                   <div className="table-row"><b>Risk Level</b><span className="risk">{selectedClaim.risk}</span></div>
@@ -153,7 +153,7 @@ function App() {
               <div className="panel-header">
                 <div><p className="eyebrow">DEFECT INTELLIGENCE</p><h3>Emerging defect signals</h3></div>
               </div>
-              <div className="table data-table">
+              <div className="table">
                 <div className="table-head"><span>DEFECT</span><span>PRODUCT</span><span>CLAIMS</span><span>SEVERITY</span></div>
                 {defects.map((defect) => (
                   <div className="table-row" key={defect.name}>
@@ -247,15 +247,6 @@ function App() {
               Analyze Claims <span>→</span>
             </button>
             {isAnalyzing && <div className="ai-processing"><span className="ai-spinner"></span><div><b>AI Analysis in progress...</b><p>Scanning warranty claims and detecting emerging patterns</p></div></div>}
-
-            <div className="ai-engine-status">
-              <span className="ai-engine-pulse"></span>
-              <div>
-                <b>AI Detection Engine</b>
-                <span>Monitoring warranty signals in real time</span>
-              </div>
-              <strong>ONLINE</strong>
-            </div>
           </div>
 
           <div className="hero-visual">
