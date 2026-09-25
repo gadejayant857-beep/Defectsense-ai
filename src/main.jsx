@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+// DefectSense production boot v2
+
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props)
