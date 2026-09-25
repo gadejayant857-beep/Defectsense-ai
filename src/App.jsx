@@ -2,6 +2,35 @@ import { useEffect, useState } from 'react'
 import { getDashboard, getClaims, getDefects, getIntelligence } from './api/defectSenseApi'
 import './App.css'
 
+function buildDefectSenseReport(claims, defects, intelligence) {
+  const criticalClaims = claims.filter((claim) => claim.severity === "Critical")
+  const warnings = intelligence.filter((item) => item.early_warning)
+
+  return {
+    generated_at: new Date().toISOString(),
+    summary: {
+      total_claims: claims.length,
+      total_defects: defects.length,
+      critical_claims: criticalClaims.length,
+      active_warnings: warnings.length,
+    },
+    defects,
+    intelligence,
+    critical_claims: criticalClaims,
+  }
+}
+
+function downloadDefectSenseFile(filename, content, type) {
+  const blob = new Blob([content], { type })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
 function App() {
   const [active, setActive] = useState('Overview')
   const [claimSearch, setClaimSearch] = useState('')
@@ -385,6 +414,353 @@ function App() {
                       <span>{item.confidence_score}%</span>
                     </div>
                   ))}
+                </div>
+
+                <div className="advanced-intelligence">
+                  <div className="section-head">
+                    <div>
+                      <p className="eyebrow">INTELLIGENCE OVERVIEW</p>
+                      <h3>Risk signals</h3>
+                    </div>
+                    <span className="section-meta">{intelligenceData.length} signals</span>
+                  </div>
+
+                  <div className="risk-signal-grid">
+                    {intelligenceData.map((item) => (
+                      <article className="risk-signal-card" key={item.issue}>
+                        <div className="risk-signal-top">
+                          <span className={`risk ${item.risk.toLowerCase()}`}>
+                            {item.risk}
+                          </span>
+                          {item.anomaly && (
+                            <span className="signal-anomaly">Anomaly</span>
+                          )}
+                        </div>
+
+                        <h4>{item.issue}</h4>
+
+                        <div className="risk-signal-metrics">
+                          <div>
+                            <span>Risk</span>
+                            <strong>{item.score}/100</strong>
+                          </div>
+                          <div>
+                            <span>Confidence</span>
+                            <strong>{item.confidence_score}/100</strong>
+                          </div>
+                          <div>
+                            <span>Trend</span>
+                            <strong>{item.trend}</strong>
+                          </div>
+                        </div>
+
+                        <p>{item.explanation}</p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="smart-alerts">
+                  <div className="section-head">
+                    <div>
+                      <p className="eyebrow">SMART ALERTS</p>
+                      <h3>Early-warning center</h3>
+                    </div>
+                    <span className="section-meta">
+                      {intelligenceData.filter((item) => item.early_warning).length} active
+                    </span>
+                  </div>
+
+                  <div className="alert-list">
+                    {intelligenceData
+                      .filter((item) => item.early_warning)
+                      .map((item) => (
+                        <article className="alert-card" key={`alert-${item.issue}`}>
+                          <div className="alert-indicator"></div>
+
+                          <div className="alert-content">
+                            <div className="alert-heading">
+                              <div>
+                                <span className={`risk ${item.risk.toLowerCase()}`}>
+                                  {item.risk}
+                                </span>
+                                <h4>{item.issue}</h4>
+                              </div>
+
+                              <strong>{item.score}/100</strong>
+                            </div>
+
+                            <p>
+                              {item.trend === "New signal"
+                                ? "New defect signal detected in recent claims."
+                                : `${item.claims} claims detected with ${item.risk.toLowerCase()} risk.`}
+                            </p>
+
+                            <div className="alert-footer">
+                              <span>Confidence {item.confidence_score}%</span>
+                              <span>{item.trend}</span>
+                              {item.anomaly && <span className="alert-anomaly">Anomaly detected</span>}
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                  </div>
+                </div>
+
+                <div className="advanced-analytics">
+                  <div className="section-head">
+                    <div>
+                      <p className="eyebrow">ADVANCED ANALYTICS</p>
+                      <h3>Operational trends</h3>
+                    </div>
+                    <span className="section-meta">Live dataset</span>
+                  </div>
+
+                  <div className="analytics-grid">
+                    <article className="analytics-card">
+                      <div className="analytics-card-head">
+                        <div>
+                          <span>Claims by product</span>
+                          <strong>{claimsData.length} total claims</strong>
+                        </div>
+                      </div>
+
+                      <div className="analytics-bars">
+                        {[...new Set(claimsData.map((claim) => claim.product))]
+                          .map((product) => {
+                            const count = claimsData.filter((claim) => claim.product === product).length
+                            const percentage = claimsData.length
+                              ? Math.round((count / claimsData.length) * 100)
+                              : 0
+
+                            return (
+                              <div className="analytics-bar-row" key={product}>
+                                <div className="analytics-label">
+                                  <span>{product}</span>
+                                  <strong>{count}</strong>
+                                </div>
+                                <div className="analytics-track">
+                                  <div
+                                    className="analytics-fill"
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )
+                          })}
+                      </div>
+                    </article>
+
+                    <article className="analytics-card">
+                      <div className="analytics-card-head">
+                        <div>
+                          <span>Severity distribution</span>
+                          <strong>Risk concentration</strong>
+                        </div>
+                      </div>
+
+                      <div className="severity-list">
+                        {["Critical", "High", "Medium", "Low"].map((severity) => {
+                          const count = claimsData.filter(
+                            (claim) => claim.severity === severity
+                          ).length
+                          const percentage = claimsData.length
+                            ? Math.round((count / claimsData.length) * 100)
+                            : 0
+
+                          return (
+                            <div className="severity-row" key={severity}>
+                              <div>
+                                <span className={`risk ${severity.toLowerCase()}`}>
+                                  {severity}
+                                </span>
+                                <strong>{count}</strong>
+                              </div>
+                              <span>{percentage}%</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </article>
+                  </div>
+
+                  <div className="analytics-card analytics-wide">
+                    <div className="analytics-card-head">
+                      <div>
+                        <span>Top defect signals</span>
+                        <strong>Detected across current claims</strong>
+                      </div>
+                    </div>
+
+                    <div className="defect-bars">
+                      {defects.slice(0, 5).map((defect) => {
+                        const maxClaims = Math.max(
+                          ...defects.map((item) => item.claims),
+                          1
+                        )
+                        const percentage = Math.round(
+                          (defect.claims / maxClaims) * 100
+                        )
+
+                        return (
+                          <div className="defect-bar-row" key={defect.issue}>
+                            <div className="analytics-label">
+                              <span>{defect.issue}</span>
+                              <strong>{defect.claims}</strong>
+                            </div>
+                            <div className="analytics-track">
+                              <div
+                                className="analytics-fill"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="reports-center">
+                  <div className="section-head">
+                    <div>
+                      <p className="eyebrow">REPORTING</p>
+                      <h3>Reports & exports</h3>
+                    </div>
+                    <span className="section-meta">Current dataset</span>
+                  </div>
+
+                  <div className="report-panel">
+                    <div className="report-summary">
+                      <div>
+                        <span>Total claims</span>
+                        <strong>{claimsData.length}</strong>
+                      </div>
+                      <div>
+                        <span>Defect signals</span>
+                        <strong>{defects.length}</strong>
+                      </div>
+                      <div>
+                        <span>Critical claims</span>
+                        <strong>{claimsData.filter((claim) => claim.severity === "Critical").length}</strong>
+                      </div>
+                      <div>
+                        <span>Active warnings</span>
+                        <strong>{intelligenceData.filter((item) => item.early_warning).length}</strong>
+                      </div>
+                    </div>
+
+                    <div className="report-actions">
+                      <button
+                        type="button"
+                        className="primary-action"
+                        onClick={() => {
+                          const report = buildDefectSenseReport(
+                            claimsData,
+                            defects,
+                            intelligenceData
+                          )
+                          downloadDefectSenseFile(
+                            `defectsense-report-${new Date().toISOString().slice(0, 10)}.json`,
+                            JSON.stringify(report, null, 2),
+                            "application/json"
+                          )
+                        }}
+                      >
+                        Export JSON report
+                      </button>
+
+                      <button
+                        type="button"
+                        className="secondary-action"
+                        onClick={() => {
+                          const headers = ["claim_id", "product", "issue", "severity", "date"]
+                          const rows = claimsData.map((claim) =>
+                            headers.map((header) =>
+                              JSON.stringify(claim[header] ?? "")
+                            ).join(",")
+                          )
+                          downloadDefectSenseFile(
+                            `defectsense-claims-${new Date().toISOString().slice(0, 10)}.csv`,
+                            [headers.join(","), ...rows].join("\n"),
+                            "text/csv;charset=utf-8"
+                          )
+                        }}
+                      >
+                        Export claims CSV
+                      </button>
+                    </div>
+
+                    <p className="report-note">
+                      Reports contain the current dashboard dataset, intelligence signals,
+                      defect analysis and critical claims.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="workspace-center">
+                  <div className="section-head">
+                    <div>
+                      <p className="eyebrow">WORKSPACE</p>
+                      <h3>DefectSense workspace</h3>
+                    </div>
+                    <span className="workspace-status">Active</span>
+                  </div>
+
+                  <div className="workspace-panel">
+                    <div className="workspace-main">
+                      <div className="workspace-icon">DS</div>
+                      <div>
+                        <strong>DefectSense AI</strong>
+                        <span>Product intelligence workspace</span>
+                      </div>
+                    </div>
+
+                    <div className="workspace-meta">
+                      <div>
+                        <span>Workspace ID</span>
+                        <strong>DS-2026-PROD</strong>
+                      </div>
+                      <div>
+                        <span>Data source</span>
+                        <strong>Claims intelligence</strong>
+                      </div>
+                      <div>
+                        <span>Access</span>
+                        <strong>Team workspace</strong>
+                      </div>
+                    </div>
+
+                    <div className="workspace-team">
+                      <div className="workspace-team-head">
+                        <div>
+                          <span className="eyebrow">TEAM</span>
+                          <h4>Workspace members</h4>
+                        </div>
+                        <span>2 members</span>
+                      </div>
+
+                      <div className="member-list">
+                        <div className="member">
+                          <div className="member-avatar">J</div>
+                          <div>
+                            <strong>Jayant</strong>
+                            <span>Workspace owner</span>
+                          </div>
+                          <b>Owner</b>
+                        </div>
+
+                        <div className="member">
+                          <div className="member-avatar">V</div>
+                          <div>
+                            <strong>Vedant</strong>
+                            <span>Project collaborator</span>
+                          </div>
+                          <b>Member</b>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <h3>Latest intelligence</h3>
