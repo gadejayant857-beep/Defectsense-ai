@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getDashboard, getClaims, getDefects } from './api/defectSenseApi'
+import { getDashboard, getClaims, getDefects, getIntelligence } from './api/defectSenseApi'
 import './App.css'
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   const [dashboardData, setDashboardData] = useState(null)
   const [claimsData, setClaimsData] = useState([])
   const [defectsData, setDefectsData] = useState([])
+  const [intelligenceData, setIntelligenceData] = useState([])
 
   useEffect(() => {
     Promise.all([
@@ -356,6 +357,36 @@ function App() {
             <div className="panel-header">
               <div>
                 <p className="eyebrow">SYSTEM ACTIVITY</p>
+                <div className="section-head" style={{marginTop: '28px'}}>
+                  <div>
+                    <h3>Live early-warning signals</h3>
+                    <small>Date-based intelligence from the analysis engine</small>
+                  </div>
+                </div>
+
+                <div className="claims-table" style={{marginTop: '14px'}}>
+                  <div className="table-head">
+                    <span>Defect</span>
+                    <span>Change</span>
+                    <span>Anomaly</span>
+                    <span>Confidence</span>
+                  </div>
+
+                  {intelligenceData.map((item) => (
+                    <div className="table-row" key={item.issue}>
+                      <b>{item.issue}</b>
+                      <span className={item.growth_percent > 0 ? "risk high" : ""}>
+                        {item.growth_percent > 0 ? "+" : ""}
+                        {item.growth_percent}%
+                      </span>
+                      <span className={item.anomaly ? "risk critical" : "risk medium"}>
+                        {item.anomaly ? "Detected" : "Normal"}
+                      </span>
+                      <span>{item.confidence_score}%</span>
+                    </div>
+                  ))}
+                </div>
+
                 <h3>Latest intelligence</h3>
               </div>
             </div>
