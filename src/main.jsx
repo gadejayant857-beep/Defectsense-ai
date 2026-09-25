@@ -1,20 +1,42 @@
-import { StrictMode } from 'react'
+import { StrictMode, Component } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import App from './App.jsx'
 
-const root = document.getElementById('root')
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { error: null }
+  }
 
-function showBootError(title, error) {
-  root.innerHTML = '<div style="min-height:100vh;background:#0b0f14;color:#f4f7f6;font-family:monospace;padding:32px;box-sizing:border-box"><h2 style="margin-top:0">' + title + '</h2><pre style="white-space:pre-wrap;color:#ff6b6b;font-size:14px">' + String(error?.stack || error?.message || error || 'Unknown error') + '</pre></div>'
+  static getDerivedStateFromError(error) {
+    return { error }
+  }
+
+  componentDidCatch(error, info) {
+    console.error('DefectSense Runtime Error:', error, info)
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ padding: '32px', fontFamily: 'monospace', background: '#0b0f14', color: '#f4f7f6', minHeight: '100vh', boxSizing: 'border-box' }}>
+          <h1>DefectSense Runtime Error</h1>
+          <pre style={{ whiteSpace: 'pre-wrap', color: '#ff6b6b' }}>
+            {this.state.error.stack || this.state.error.message}
+          </pre>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
 }
 
-import('./App.jsx')
-  .then(({ default: App }) => {
-    root.innerHTML = ''
-    createRoot(root).render(
-      <StrictMode>
-        <App />
-      </StrictMode>,
-    )
-  })
-  .catch((error) => showBootError('DefectSense App Load Error', error))
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  </StrictMode>,
+)
