@@ -1,22 +1,17 @@
+import csv
 from collections import Counter
 from datetime import datetime
+from pathlib import Path
 
-from .database import get_connection
 from .risk_engine import calculate_risk
 from .severity_engine import severity_score
 
+DATA_FILE = Path(__file__).resolve().parents[1] / "data" / "claims.csv"
+
 
 def load_claims():
-    with get_connection() as connection:
-        rows = connection.execute(
-            """
-            SELECT claim_id, product, issue, description, severity, date
-            FROM claims
-            ORDER BY date
-            """
-        ).fetchall()
-
-    return [dict(row) for row in rows]
+    with DATA_FILE.open(newline="", encoding="utf-8") as file:
+        return list(csv.DictReader(file))
 
 
 def calculate_growth(previous_count, current_count):

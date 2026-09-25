@@ -1,9 +1,29 @@
-from .defect_detector import load_claims, detect_defects
+from .database import get_connection
 from .risk_engine import calculate_risk
 
 
 def get_claims():
-    claims = load_claims()
+    with get_connection() as connection:
+        claims = connection.execute(
+            """
+            SELECT claim_id, product, issue, description, severity, date
+            FROM claims
+            ORDER BY date
+            """
+        ).fetchall()
+
+        issue_counts = connection.execute(
+            """
+            SELECT issue, COUNT(*) AS count
+            FROM claims
+            GROUP BY issue
+            """
+        ).fetchall()
+
+    counts = {
+        row["issue"]: row["count"]
+        for row in issue_counts
+    }
 
     return [
         {
@@ -14,7 +34,7 @@ def get_claims():
             "severity": claim["severity"],
             "date": claim["date"],
             "risk": calculate_risk(
-                sum(1 for item in claims if item["issue"] == claim["issue"])
+                counts.get(claim["issue"], 0)
             )["risk"],
         }
         for claim in claims
@@ -22,25 +42,41 @@ def get_claims():
 
 
 def get_defects():
-    defects = detect_defects()
+    with get_connection() as connection:
+        defects = connection.execute(
+            """
+            SELECT issue, COUNT(*) AS claims
+            FROM claims
+            GROUP BY issue
+            ORDER BY claims DESC
+            """
+        ).fetchall()
 
-    results = []
+        products = connection.execute(
+            """
+            SELECT issue, product
+            FROM claims
+            GROUP BY issue
+            ORDER BY date
+            """
+        ).fetchall()
 
-    for defect in defects:
-        risk = calculate_risk(defect["claims"])
+    product_map = {
+        row["issue"]: row["product"]
+        for row in products
+    }
 
-        matching_claims = [
-            claim for claim in load_claims()
-            if claim["issue"] == defect["issue"]
-        ]
-
-        product = matching_claims[0]["product"] if matching_claims else "Unknown"
-
-        results.append({
+    return [
+        {
             "name": defect["issue"],
-            "product": product,
+            "product": product_map.get(
+                defect["issue"],
+                "Unknown",
+            ),
             "claims": defect["claims"],
-            "severity": risk["risk"],
-        })
-
-    return results
+            "severity": calculate_risk(
+                defect["claims"]
+            )["risk"],
+        }
+        for defect in defects
+    ]
