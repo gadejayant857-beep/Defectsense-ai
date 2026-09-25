@@ -1,0 +1,1 @@
+document.getElementById('root').innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#070a0c;color:#f4f7f6;font-family:system-ui"><div style="text-align:center"><div style="font-size:42px;font-weight:800">DefectSense AI</div><div style="margin-top:12px;color:#2f8cff">ES MODULE TEST: SUCCESS</div></div></div>'
