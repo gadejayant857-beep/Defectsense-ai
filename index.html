@@ -1,12 +1,28 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DefectSense AI</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DefectSense AI</title>
+<style>
+html,body{margin:0;min-width:320px;min-height:100%;background:#070a0c}
+#boot-fallback{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 50% 20%,rgba(47,140,255,.14),transparent 35%),#070a0c;color:#f4f7f6;font-family:Inter,system-ui,sans-serif}
+.boot-card{text-align:center;padding:40px 28px;border:1px solid rgba(255,255,255,.1);border-radius:24px;background:rgba(255,255,255,.045);box-shadow:0 20px 80px rgba(0,0,0,.4);max-width:520px}
+.boot-title{font-size:clamp(32px,8vw,52px);font-weight:800;letter-spacing:-2px}
+.boot-sub{margin-top:12px;color:#9aa5b1;font-size:15px}
+.boot-status{display:inline-block;margin-top:22px;padding:9px 14px;border-radius:999px;background:rgba(47,140,255,.12);color:#2f8cff;font-size:13px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="root"><div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">Warranty intelligence & early defect detection</div><div class="boot-status">Starting application…</div></div></div></div>
+<script>
+window.__DEFECTSENSE_BOOT__=true;
+window.addEventListener('error',function(e){
+document.getElementById('root').innerHTML='<div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">Application startup error detected.</div><div class="boot-status>Reloading…</div></div></div>';
+console.error('DefectSense startup error:',e.error||e.message);
+});
+window.addEventListener('unhandledrejection',function(e){console.error('DefectSense promise error:',e.reason);});
+</script>
+<script type="module" src="/src/main.jsx"></script>
+</body>
 </html>
