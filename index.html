@@ -1,4 +1,12 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>DefectSense AI</title></head><body><div id="root"></div><script>
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>DefectSense AI</title><script>
+window.addEventListener("error",function(e){
+document.body.innerHTML='<div style="padding:24px;background:#070a0f;color:#ff7070;font:14px monospace;min-height:100vh;box-sizing:border-box"><h1 style="color:#2f8cff">DefectSense AI</h1><h2>Browser startup error</h2><pre style="white-space:pre-wrap">'+String(e.error?.stack||e.message||e.error||e)+'</pre></div>';
+});
+window.addEventListener("unhandledrejection",function(e){
+document.body.innerHTML='<div style="padding:24px;background:#070a0f;color:#ff7070;font:14px monospace;min-height:100vh;box-sizing:border-box"><h1 style="color:#2f8cff">DefectSense AI</h1><h2>Promise startup error</h2><pre style="white-space:pre-wrap">'+String(e.reason?.stack||e.reason?.message||e.reason)+'</pre></div>';
+});
+</script>
+</head><body><div id="root"></div><script>
 window.addEventListener("error",function(e){
 document.body.innerHTML='<pre style="white-space:pre-wrap;padding:24px;background:#070a0f;color:#ff7070;font:14px monospace">DefectSense browser error:\n\n'+(e.error?.stack||e.message||String(e.error||e))+'</pre>'
 });
