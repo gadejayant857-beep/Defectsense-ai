@@ -52,10 +52,14 @@ function App() {
       getDashboard(),
       getClaims(),
       getDefects(),
-    ]).then(([dashboard, claims, defects]) => {
+      getIntelligence(),
+    ]).then(([dashboard, claims, defects, intelligence]) => {
       setDashboardData(dashboard)
       setClaimsData(claims)
       setDefectsData(defects)
+      setIntelligenceData(intelligence)
+    }).catch((error) => {
+      console.error("DefectSense API error:", error)
     })
   }, [])
 
