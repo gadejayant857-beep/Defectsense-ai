@@ -1,0 +1,9 @@
+claim_id,product,issue,description,severity,date
+CLM-10001,Model X1,Battery overheating,"Battery temperature rises during charging",Critical,2026-09-01
+CLM-10002,Model X1,Battery overheating,"Device becomes unusually hot after charging",Critical,2026-09-02
+CLM-10003,Model A7,Brake vibration,"Vibration felt while braking at medium speed",High,2026-09-03
+CLM-10004,Model X1,Display failure,"Screen flickers intermittently during use",Medium,2026-09-04
+CLM-10005,Model B4,Charging fault,"Charging stops before reaching full capacity",High,2026-09-05
+CLM-10006,Model X1,Battery overheating,"Unexpected shutdown after device temperature increased",Critical,2026-09-06
+CLM-10007,Model A7,Brake vibration,"Steering wheel vibrates during braking",High,2026-09-07
+CLM-10008,Model X1,Battery overheating,"High temperature warning appears while charging",Critical,2026-09-08
