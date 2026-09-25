@@ -1,13 +1,1 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <div style={{minHeight:'100vh',display:'grid',placeItems:'center',background:'#070a0c',color:'#f4f7f6',fontFamily:'system-ui'}}>
-      <div style={{textAlign:'center'}}>
-        <div style={{fontSize:'48px',fontWeight:'800'}}>DefectSense AI</div>
-        <div style={{marginTop:'12px',color:'#2f8cff'}}>React + Vite: SUCCESS</div>
-      </div>
-    </div>
-  </StrictMode>,
-)
+document.getElementById('root').innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#070a0c;color:#f4f7f6;font-family:system-ui"><div style="text-align:center"><div style="font-size:42px;font-weight:800">DefectSense AI</div><div style="margin-top:12px;color:#2f8cff">Vite module execution: SUCCESS</div></div></div>'
