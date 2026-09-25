@@ -7,7 +7,17 @@
     <title>defectsense-ai</title>
   </head>
   <body>
-    <div id="root"></div></div>
+    <div id="root"><div id="boot-status" style="padding:32px;font-family:monospace;background:#0b0f14;color:#f4f7f6;min-height:100vh;box-sizing:border-box"><h2>DefectSense AI</h2><p>Loading application...</p></div></div>
+<script>
+window.addEventListener("error",function(e){
+  var r=document.getElementById("root");
+  r.innerHTML='<div style="padding:32px;font-family:monospace;background:#0b0f14;color:#f4f7f6;min-height:100vh;box-sizing:border-box"><h2 style="color:#ff6b6b">DefectSense Runtime Error</h2><pre style="white-space:pre-wrap;color:#ff6b6b">'+String(e.error?.stack||e.message||e.filename||"Unknown error")+'</pre></div>';
+});
+window.addEventListener("unhandledrejection",function(e){
+  var r=document.getElementById("root");
+  r.innerHTML='<div style="padding:32px;font-family:monospace;background:#0b0f14;color:#f4f7f6;min-height:100vh;box-sizing:border-box"><h2 style="color:#ff6b6b">DefectSense Promise Error</h2><pre style="white-space:pre-wrap;color:#ff6b6b">'+String(e.reason?.stack||e.reason||"Unknown rejection")+'</pre></div>';
+});
+</script></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
