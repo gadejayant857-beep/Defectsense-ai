@@ -18,10 +18,15 @@ html,body{margin:0;min-width:320px;min-height:100%;background:#070a0c}
 <script>
 window.__DEFECTSENSE_BOOT__=true;
 window.addEventListener('error',function(e){
-document.getElementById('root').innerHTML='<div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">Application startup error detected.</div><div class="boot-status>Reloading…</div></div></div>';
+var r=document.getElementById('root');
+if(r) r.innerHTML='<div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">React startup error</div><pre style="white-space:pre-wrap;text-align:left;margin-top:20px;color:#ff7070;font-size:12px">'+String(e.error?.stack||e.message||'Unknown error').replace(/</g,'&lt;')+'</pre></div></div>';
 console.error('DefectSense startup error:',e.error||e.message);
 });
-window.addEventListener('unhandledrejection',function(e){console.error('DefectSense promise error:',e.reason);});
+window.addEventListener('unhandledrejection',function(e){
+var r=document.getElementById('root');
+if(r) r.innerHTML='<div id="boot-fallback"><div class="boot-card"><div class="boot-title">DefectSense AI</div><div class="boot-sub">JavaScript promise error</div><pre style="white-space:pre-wrap;text-align:left;margin-top:20px;color:#ff7070;font-size:12px">'+String(e.reason?.stack||e.reason||'Unknown promise error').replace(/</g,'&lt;')+'</pre></div></div>';
+console.error('DefectSense promise error:',e.reason);
+});
 </script>
 <script type="module" src="/src/main.jsx"></script>
 </body>
