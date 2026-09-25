@@ -1,1 +1,8 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>DefectSense AI</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>DefectSense AI</title></head><body><div id="root"></div><script>
+window.addEventListener("error",function(e){
+document.body.innerHTML='<pre style="white-space:pre-wrap;padding:24px;background:#070a0f;color:#ff7070;font:14px monospace">DefectSense browser error:\n\n'+(e.error?.stack||e.message||String(e.error||e))+'</pre>'
+});
+window.addEventListener("unhandledrejection",function(e){
+document.body.innerHTML='<pre style="white-space:pre-wrap;padding:24px;background:#070a0f;color:#ff7070;font:14px monospace">DefectSense promise error:\n\n'+(e.reason?.stack||e.reason?.message||String(e.reason))+'</pre>'
+});
+</script><script type="module" src="/src/main.jsx"></script></body></html>
